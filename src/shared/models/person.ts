@@ -1,4 +1,5 @@
 export interface Person {
+  status: number
   id: number
   first_name: string
   last_name: string

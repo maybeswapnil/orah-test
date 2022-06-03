@@ -7,11 +7,15 @@ import { RollStateList } from "staff-app/components/roll-state/roll-state-list.c
 export type ActiveRollAction = "filter" | "exit"
 interface Props {
   isActive: boolean
+  all: number
   onItemClick: (action: ActiveRollAction, value?: string) => void
+  abscent: number
+  late: number
+  present: number
 }
 
 export const ActiveRollOverlay: React.FC<Props> = (props) => {
-  const { isActive, onItemClick } = props
+  const { isActive, onItemClick, all, late, present, abscent} = props
 
   return (
     <S.Overlay isActive={isActive}>
@@ -20,10 +24,10 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
         <div>
           <RollStateList
             stateList={[
-              { type: "all", count: 0 },
-              { type: "present", count: 0 },
-              { type: "late", count: 0 },
-              { type: "absent", count: 0 },
+              { type: "all", count: all },
+              { type: "present", count: present },
+              { type: "late", count: late },
+              { type: "absent", count: abscent },
             ]}
           />
           <div style={{ marginTop: Spacing.u6 }}>
