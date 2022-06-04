@@ -37,7 +37,9 @@ export const HomeBoardPage: React.FC = () => {
       return 0;
     }
     descView?data?.students.sort(sortCallback):data?.students.sort(sortCallback);
-    setSortedData(data)
+    
+    data?setSortedData({...data}):null;
+
   }, [descView])
 
   const onToolbarAction = (action: ToolbarAction) => {
@@ -57,34 +59,44 @@ export const HomeBoardPage: React.FC = () => {
   }
 
   const changeStatus = (key: number, status: RolllStateType) => {
-    console.log(status)
-    data?.students.map(r => {
-      if(r.id===key) r.status = status
-    })
-    let p = 0;
-    let l = 0;
-    let a = 0;
+    data?.students.map(r => { if(r.id===key) r.status = status })
+
+    let p = 0,
+        l = 0,
+        a = 0;
+      
     data?.students.map(r => {
       if(r.status==='present') p++;
       if(r.status==='late') l++;
       if(r.status==='absent') a++;
     })
+
+    let statusObject = {
+      "present": p,
+      "late": l,
+      "absent": a
+    }
     setPresent(p)
     setlate(l)
     setAbscent(a)
     setSortedData(data)
+
   }
 
   const onActiveRollAction = (action: ActiveRollAction) => {
     if (action === "exit") {
       setIsRollMode(false)
     }
+    if (action === "complete") {
+      console.log('asdasd')
+      //useApi<{ students: Person[] }>({ url: "save-roll" })
+    }
   }
 
   return (
     <>
       <S.PageContainer>
-        <Toolbar onItemClick={onToolbarAction} search={setSearch} view={descView}/>
+        <Toolbar onItemClick={onToolbarAction} search={setSearch} view={!descView}/>
 
         {loadState === "loading" && (
           <CenteredContainer>

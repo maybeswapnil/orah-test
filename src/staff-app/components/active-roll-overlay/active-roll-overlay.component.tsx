@@ -7,7 +7,7 @@ import { RolllStateType } from "shared/models/roll"
 
 type ItemType = RolllStateType | "all"
 
-export type ActiveRollAction = "filter" | "exit"
+export type ActiveRollAction = "filter" | "exit" | "complete"
 interface Props {
   isActive: boolean
   all: number
@@ -19,6 +19,7 @@ interface Props {
 }
 
 export const ActiveRollOverlay: React.FC<Props> = (props) => {
+  
   const { isActive, onItemClick, all, late, present, abscent, sortByStatus} = props
 
   return (
@@ -39,7 +40,7 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
             <Button color="inherit" onClick={() => onItemClick("exit")}>
               Exit
             </Button>
-            <Button color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("exit")}>
+            <Button color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("complete")}>
               Complete
             </Button>
           </div>
