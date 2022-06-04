@@ -9,6 +9,7 @@ import { Person } from "shared/models/person"
 import { useApi } from "shared/hooks/use-api"
 import { StudentListTile } from "staff-app/components/student-list-tile/student-list-tile.component"
 import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active-roll-overlay/active-roll-overlay.component"
+import { RolllStateType } from "shared/models/roll"
 
 export const HomeBoardPage: React.FC = () => {
   const [isRollMode, setIsRollMode] = useState(false)
@@ -19,8 +20,7 @@ export const HomeBoardPage: React.FC = () => {
   const [present, setPresent] = useState(0)
   const [late, setlate] = useState(0)
   const [abscent, setAbscent] = useState(0)
-
-  console.log(data?.students)
+  const [filter, setFilter] = useState('all')
 
   useEffect(() => {
     void getStudents()
@@ -51,25 +51,23 @@ export const HomeBoardPage: React.FC = () => {
 
   const storeWithStatus = (dataSample: any) => {
     data?.students.map(r => {
-      r.status = 0;
+      r.status = 'unmark';
     })
     setSortedData(data)
   }
 
-  const changeStatus = (key: number) => {
+  const changeStatus = (key: number, status: RolllStateType) => {
+    console.log(status)
     data?.students.map(r => {
-      if(r.id===key) {
-        if(r.status===3) r.status=1;
-        else r.status+=1;
-      }
+      if(r.id===key) r.status = status
     })
     let p = 0;
     let l = 0;
     let a = 0;
     data?.students.map(r => {
-      if(r.status===1) p++;
-      if(r.status===2) l++;
-      if(r.status===3) a++;
+      if(r.status==='present') p++;
+      if(r.status==='late') l++;
+      if(r.status==='absent') a++;
     })
     setPresent(p)
     setlate(l)
@@ -96,7 +94,12 @@ export const HomeBoardPage: React.FC = () => {
 
         {loadState === "loaded" && sortedData?.students && (
           <>
-            {sortedData.students.filter(r => {if((r.first_name + ' ' + r.last_name).toLowerCase().includes(search)) return r}).map((s) => (
+            {sortedData.students.filter(r => {
+              if(filter==='all') return r 
+              else if(r.status===filter) return r;
+            }).filter(r => {
+              if((r.first_name + ' ' + r.last_name).toLowerCase().includes(search)) return r;
+            }).map((s) => (
               <StudentListTile key={s.id} isRollMode={isRollMode} student={s} changeStatus={changeStatus}/>
             ))}
           </>
@@ -108,7 +111,7 @@ export const HomeBoardPage: React.FC = () => {
           </CenteredContainer>
         )}
       </S.PageContainer>
-      <ActiveRollOverlay isActive={isRollMode} onItemClick={onActiveRollAction} all={sortedData?.students.length||0} present={present||0} late={late||0} abscent={abscent||0}/>
+      <ActiveRollOverlay isActive={isRollMode} onItemClick={onActiveRollAction} sortByStatus={setFilter} all={data?.students.length||0} present={present||0} late={late||0} abscent={abscent||0}/>
     </>
   )
 }

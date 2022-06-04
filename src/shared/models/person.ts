@@ -1,5 +1,7 @@
+import { RolllStateType } from "./roll"
+
 export interface Person {
-  status: number
+  status: RolllStateType
   id: number
   first_name: string
   last_name: string
