@@ -16,6 +16,7 @@ export const HomeBoardPage: React.FC = () => {
   const [search, setSearch] = useState('')
   const [descView, setDescView] = useState(false)
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
+  const [setRoll] = useApi<{ students: Person[] }>({ url: "save-roll" })
   const [sortedData, setSortedData] = useState(data)
   const [present, setPresent] = useState(0)
   const [late, setlate] = useState(0)
@@ -88,8 +89,13 @@ export const HomeBoardPage: React.FC = () => {
       setIsRollMode(false)
     }
     if (action === "complete") {
-      console.log('asdasd')
-      //useApi<{ students: Person[] }>({ url: "save-roll" })
+      let out = new Array();
+        sortedData?.students.map(r => {
+          let j = { student_id: r.id, roll_state: r.status };
+          out.push(j)
+        })
+        setRoll(out)
+        setIsRollMode(false)
     }
   }
 

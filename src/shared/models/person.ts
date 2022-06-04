@@ -1,6 +1,7 @@
 import { RolllStateType } from "./roll"
 
 export interface Person {
+  entity: any
   status: RolllStateType
   id: number
   first_name: string
